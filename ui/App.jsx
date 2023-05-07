@@ -42,6 +42,10 @@ export const App = () => {
     return { isPeopleLoading: false, people: peopleData };
   });
 
+  function handleCheckIn(personId) {
+    Meteor.call('people.checkIn', personId);
+  }
+
   return (
     <div className="max-w-7xl w-full mx-auto my-12">
       <h1 className="text-3xl">{Texts.HOME_TITLE}</h1>
@@ -72,11 +76,13 @@ export const App = () => {
                       </div>
                     ) : ''}
                     <div className="flex gap-4">
-                      <time>Check-in: 05/05/2023,20:00</time>
+                      <time>Check-in: {person.checkIn ? person.checkIn : 'N/A'}</time>
                       <time>Check-out: 05/10/2023,14:00</time>
                     </div>
                   </div>
-                  <button className="bg-gray-300 p-2 rounded-md">Check in {person.firstName} {person.lastName}</button>
+                  <button onClick={() => handleCheckIn(person._id)} className="bg-gray-300 p-2 rounded-md">
+                    Check in {person.firstName} {person.lastName}
+                  </button>
                 </li>
               ))}
             </ul>
