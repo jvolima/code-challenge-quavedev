@@ -12,11 +12,12 @@ export const App = () => {
   const [, setReload] = useState(false);
 
   /*
-    The userTracker is responsible for fetching community data. First, I subscribe to the communities
+    This userTracker is responsible for fetching community data. First, I subscribe to the communities
     publisher to obtain the data. Next, I check the handler for readiness. If the handler isn't ready,
     I set isLoading to true and return an empty communities array. Finally, I fetch the Communities collection.
     Once the data was successfully fetch, I set isLoading to false and return the populated array.
   */
+
   const { communities, isCommuitiesLoading } = useTracker(() => {
     const communitiesHandler = Meteor.subscribe('communities');
 
@@ -28,6 +29,14 @@ export const App = () => {
 
     return { isCommuitiesLoading: false, communities: communitiesData };
   });
+
+  /*
+    This userTracker is responsible for fetching people data. First I check if there is any community id,
+    because if not there is no way to search for people in the community. After that I subscribe to the people
+    publisher to obtain the data. Next, I check the handler for readiness. If the handler isn't ready,
+    I set isLoading to true and return an empty people array. Finally, I fetch the People collection passing the community id.
+    Once the data was successfully fetch, I set isLoading to false and return the populated array.
+  */
 
   const { people, isPeopleLoading } = useTracker(() => {
     if (!communityId) {
@@ -45,6 +54,8 @@ export const App = () => {
     return { isPeopleLoading: false, people: peopleData };
   });
 
+  // This function is to return the text of the button, so just need to return 'in' or 'out'.
+
   function checkText(checkIn) {
     if (!checkIn) {
       return 'in';
@@ -52,6 +63,12 @@ export const App = () => {
 
     return 'out';
   }
+
+  /*
+    This function is responsible for checking if the button will be shown or not. First it checks if
+    the user has already checked out to return false, then check if the user has checked in and the
+    time passed is less than 5, if the person does not match these conditions, the function returns true
+  */
 
   function showButton(person) {
     if (person.checkOut) {
@@ -64,6 +81,13 @@ export const App = () => {
 
     return true;
   }
+
+  /*
+    This function receives the person as a parameter and is responsible for calling either
+    the checkIn or checkOut function. First, it checks if the person has already checkedIn,
+    if not, it calls the checkIn function and gives a 5 second timeout to reload the screen
+    and show the checkOut button, if the person has already checkedOut, the function will call the function checkout.
+  */
 
   function handleCheck(person) {
     if (!person.checkIn) {
