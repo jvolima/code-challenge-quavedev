@@ -4,9 +4,12 @@ import { useTracker } from 'meteor/react-meteor-data';
 import { Texts } from '../infra/constants';
 import { Communities } from '../communities/communities';
 import { People } from '../people/people';
+import { formatDate } from '../utils/formatDate';
+import { timePassedInSeconds } from '../utils/timePassedInSeconds';
 
 export const App = () => {
   const [communityId, setCommunityId] = useState('');
+  const [, setReload] = useState(false);
 
   /*
     The userTracker is responsible for fetching community data. First, I subscribe to the communities
@@ -42,8 +45,36 @@ export const App = () => {
     return { isPeopleLoading: false, people: peopleData };
   });
 
-  function handleCheckIn(personId) {
-    Meteor.call('people.checkIn', personId);
+  function checkText(checkIn) {
+    if (!checkIn) {
+      return 'in';
+    }
+
+    return 'out';
+  }
+
+  function showButton(person) {
+    if (person.checkOut) {
+      return false;
+    }
+
+    if (person.checkIn && timePassedInSeconds(new Date(person.checkIn)) < 5) {
+      return false;
+    }
+
+    return true;
+  }
+
+  function handleCheck(person) {
+    if (!person.checkIn) {
+      Meteor.call('people.checkIn', person._id);
+      setTimeout(() => {
+        setReload(oldState => !oldState);
+      }, 5000);
+      return;
+    }
+
+    Meteor.call('people.checkOut', person._id);
   }
 
   return (
@@ -69,20 +100,22 @@ export const App = () => {
                 <li key={person._id} className="flex items-center justify-between">
                   <div className="flex flex-col">
                     <span>Name: {person.firstName} {person.lastName}</span>
-                    {person.companyName && person.title ? (
+                    {person.companyName && person.title && (
                       <div className="flex gap-4">
                         <span>Company: {person.companyName}</span>
                         <span>Title: {person.title}</span>
                       </div>
-                    ) : ''}
+                    )}
                     <div className="flex gap-4">
-                      <time>Check-in: {person.checkIn ? person.checkIn : 'N/A'}</time>
-                      <time>Check-out: 05/10/2023,14:00</time>
+                      <time>Check-in: {person.checkIn ? formatDate(new Date(person.checkIn)) : 'N/A'}</time>
+                      <time>Check-out: {person.checkOut ? formatDate(new Date(person.checkOut)) : 'N/A'}</time>
                     </div>
                   </div>
-                  <button onClick={() => handleCheckIn(person._id)} className="bg-gray-300 p-2 rounded-md">
-                    Check in {person.firstName} {person.lastName}
-                  </button>
+                  {showButton(person) === true && (
+                    <button onClick={() => handleCheck(person)} className="bg-gray-300 p-2 rounded-md">
+                    Check {checkText(person.checkIn)} {person.firstName} {person.lastName}
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>

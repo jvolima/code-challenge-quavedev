@@ -49,7 +49,7 @@ The list of people should allow the event host to:
 
 - [x] see first and last name together (full name), company name, title, check-in date, and check-out date both using `MM/DD/YYYY, HH:mm` format or `N/A`;
 - [x] check people into the event by clicking the "Check-in {person firstName and lastName}" button;
-- if the user was checked-in over five seconds ago, we want to see a "Check-out {person firstName and lastName}" check-out button.
+- [x] if the user was checked-in over five seconds ago, we want to see a "Check-out {person firstName and lastName}" check-out button.
 
 Between the event selector and the list of people we want to see a summary like this:
 
