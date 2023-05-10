@@ -101,6 +101,10 @@ export const App = () => {
     Meteor.call('people.checkOut', person._id);
   }
 
+  function peopleInTheEvent() {
+    return people.filter(person => person.checkIn && !person.checkOut).length;
+  }
+
   return (
     <div className="max-w-7xl w-full mx-auto my-12">
       <h1 className="text-3xl">{Texts.HOME_TITLE}</h1>
@@ -116,10 +120,18 @@ export const App = () => {
             ))}
           </select>
 
+          {!isPeopleLoading && communityId && (
+            <div className="flex flex-col my-10">
+              <strong>People in the event right now: {peopleInTheEvent()}</strong>
+              <strong>People by company in the event right now: Green Group (10), Hoppe Group (5)</strong>
+              <strong>People not checked-in: 200</strong>
+            </div>
+          )}
+
           {isPeopleLoading ? (
             <span className="mt-4">Loading...</span>
           ) : (
-            <ul className="mt-6 flex flex-col gap-6">
+            <ul className="flex flex-col gap-6">
               {people.map(person => (
                 <li key={person._id} className="flex items-center justify-between">
                   <div className="flex flex-col">
@@ -137,7 +149,7 @@ export const App = () => {
                   </div>
                   {showButton(person) === true && (
                     <button onClick={() => handleCheck(person)} className="bg-gray-300 p-2 rounded-md">
-                    Check {checkText(person.checkIn)} {person.firstName} {person.lastName}
+                      Check {checkText(person.checkIn)} {person.firstName} {person.lastName}
                     </button>
                   )}
                 </li>
