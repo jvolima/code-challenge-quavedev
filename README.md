@@ -53,9 +53,9 @@ The list of people should allow the event host to:
 
 Between the event selector and the list of people we want to see a summary like this:
 
-- `People in the event right now: 10`;
-- `People by company in the event right now: Green Group (10), Hoppe Group (5)`;
-- `People not checked-in: 200`;
+- [x] `People in the event right now: 10`;
+- [] `People by company in the event right now: Green Group (10), Hoppe Group (5)`;
+- [x] `People not checked-in: 200`;
 
 The page needs to be reactive -- no refresh should be needed to display the latest data.
 

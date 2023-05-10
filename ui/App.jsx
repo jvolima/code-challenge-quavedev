@@ -105,6 +105,10 @@ export const App = () => {
     return people.filter(person => person.checkIn && !person.checkOut).length;
   }
 
+  function peopleNotCheckedIn() {
+    return people.filter(person => !person.checkIn).length;
+  }
+
   return (
     <div className="max-w-7xl w-full mx-auto my-12">
       <h1 className="text-3xl">{Texts.HOME_TITLE}</h1>
@@ -124,7 +128,7 @@ export const App = () => {
             <div className="flex flex-col my-10">
               <strong>People in the event right now: {peopleInTheEvent()}</strong>
               <strong>People by company in the event right now: Green Group (10), Hoppe Group (5)</strong>
-              <strong>People not checked-in: 200</strong>
+              <strong>People not checked-in: {peopleNotCheckedIn()}</strong>
             </div>
           )}
 
