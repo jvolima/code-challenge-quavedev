@@ -137,7 +137,7 @@ export const App = () => {
       companies.push(`${companyName} (1)`);
     });
 
-    return companies;
+    return companies.length > 0 ? companies : ['none'];
   }
 
   return (
