@@ -157,9 +157,15 @@ export const App = () => {
 
           {!isPeopleLoading && communityId && (
             <div className="flex flex-col my-10">
-              <strong>People in the event right now: {peopleInTheEvent()}</strong>
-              <strong>People by company in the event right now: {peopleByCompanyInTheEvent().join(' ')}</strong>
-              <strong>People not checked-in: {peopleNotCheckedIn()}</strong>
+              <span>
+                <strong>People in the event right now:</strong> {peopleInTheEvent()}
+              </span>
+              <span>
+                <strong>People by company in the event right now:</strong> {peopleByCompanyInTheEvent().join(', ')}
+              </span>
+              <span>
+                <strong>People not checked-in:</strong> {peopleNotCheckedIn()}
+              </span>
             </div>
           )}
 
