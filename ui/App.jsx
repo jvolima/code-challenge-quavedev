@@ -109,6 +109,37 @@ export const App = () => {
     return people.filter(person => !person.checkIn).length;
   }
 
+  function peopleByCompanyInTheEvent() {
+    const peopleIn = people.filter(person => person.checkIn && !person.checkOut);
+
+    let companies = [];
+
+    peopleIn.forEach(person => {
+      const { companyName } = person;
+
+      if (!companyName) {
+        return;
+      }
+
+      const companyNameAlreadyInList = companies.findIndex(name => name.includes(companyName));
+
+      if (companyNameAlreadyInList !== -1) {
+        const companiesCopy = [...companies];
+
+        const [, companyNumberWithParentheses] = companiesCopy[companyNameAlreadyInList].split(/(?<=\D)(?=\d)/);
+        const companyNumber = Number(companyNumberWithParentheses.replace('(', '').replace(')', ''));
+
+        companiesCopy[companyNameAlreadyInList] = `${companyName} (${companyNumber + 1})`;
+        companies = [...companiesCopy];
+        return;
+      }
+
+      companies.push(`${companyName} (1)`);
+    });
+
+    return companies;
+  }
+
   return (
     <div className="max-w-7xl w-full mx-auto my-12">
       <h1 className="text-3xl">{Texts.HOME_TITLE}</h1>
@@ -127,7 +158,7 @@ export const App = () => {
           {!isPeopleLoading && communityId && (
             <div className="flex flex-col my-10">
               <strong>People in the event right now: {peopleInTheEvent()}</strong>
-              <strong>People by company in the event right now: Green Group (10), Hoppe Group (5)</strong>
+              <strong>People by company in the event right now: {peopleByCompanyInTheEvent().join(' ')}</strong>
               <strong>People not checked-in: {peopleNotCheckedIn()}</strong>
             </div>
           )}
